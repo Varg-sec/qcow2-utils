@@ -1,0 +1,47 @@
+name: serveqcow2
+help: Mount a qcow2 image via qemu-nbd
+version: 0.1.0
+
+commands:
+- name: mount
+  alias: m
+  help: Mount a qcow2 image as Network Block Device
+
+  dependencies:
+    - qemu-nbd
+    - nbd-client
+    - fdisk
+
+  args:
+  - name: image
+    required: true
+    help: Path to the qcow2 image
+  - name: mountpoint
+    help: Mountpoint of the VM image
+    default: /tmp/eval_mnt
+
+  flags:
+  - long: --snapshot
+    short: -s
+    help: Snapshot to mount (currently not implemented)
+  - long: --partition
+    short: -p
+    arg: partition
+    help: Explicit number of partition to mount (defaults to largest, which is usually fine.)
+
+  examples:
+    - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2
+    - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2 /mnt/win11 -p 1
+
+- name: umount
+  alias: u
+  help: Unmount a qcow2 image
+
+  args:
+  - name: mountpoint
+    default: /tmp/eval_mnt
+    help: Mountpoint of the VM image
+
+examples:
+  - serveqcow2 umount
+  - serveqcow2 umount /mnt/win11
