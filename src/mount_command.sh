@@ -24,6 +24,8 @@ else
   qemu-nbd --connect="$device" "${args[image]}"
 fi
 
+
+
 if [[ -z "${args[--partition]}" ]]; then
   # get largest device
   device_to_mount=$(
