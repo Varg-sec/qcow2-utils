@@ -24,7 +24,7 @@ commands:
   - long: --snapshot
     short: -s
     arg: snapshot
-    help: Snapshot to mount (currently not implemented)
+    help: Snapshot to mount
   - long: --partition
     short: -p
     arg: partition
