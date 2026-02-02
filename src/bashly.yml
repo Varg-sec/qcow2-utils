@@ -23,6 +23,7 @@ commands:
   flags:
   - long: --snapshot
     short: -s
+    arg: snapshot
     help: Snapshot to mount (currently not implemented)
   - long: --partition
     short: -p
@@ -48,4 +49,4 @@ commands:
 
 examples:
   - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2
-  - serveqcow2 umount /mnt/tmp_eval
+  - serveqcow2 umount /tmp/eval_mnt
