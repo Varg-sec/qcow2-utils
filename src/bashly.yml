@@ -42,6 +42,10 @@ commands:
     default: /tmp/eval_mnt
     help: Mountpoint of the VM image
 
+  examples:
+    - serveqcow2 umount
+    - serveqcow2 umount /mnt/win11
+
 examples:
-  - serveqcow2 umount
-  - serveqcow2 umount /mnt/win11
+  - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2
+  - serveqcow2 umount /mnt/tmp_eval
