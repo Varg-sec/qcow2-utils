@@ -9,5 +9,4 @@ device=$(
 umount "${args[mountpoint]}"
 rmdir "${args[mountpoint]}"
 
-qemu-nbd -d "$device"
-
+qemu-nbd -d "$device" &> /dev/null
