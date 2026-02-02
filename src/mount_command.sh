@@ -4,16 +4,13 @@ modprobe nbd max_part=8
 available_devices=$(ls /dev/nbd*)
 
 for device in $available_devices; do
-  nbd-client -c "$device" &> /dev/null
-
-  if [[ $? -ne 0 ]]; then
-    echo "$device"
+  if ! nbd-client -c "$device"; then
     break
   fi
 done
 
 # TODO: add --load-snapshot=snapshot.name=<name> to access snapshot
-qemu-nbd --connect="$device" "$1"
+qemu-nbd --connect="$device" "${args[image]}"
 
 if [[ -z "${args[--partition]}" ]]; then
   # get largest device
