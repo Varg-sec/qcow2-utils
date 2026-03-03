@@ -9,6 +9,8 @@ for device in $available_devices; do
   fi
 done
 
+echo Connect to local NBD device "$device"
+
 if [[ "${args[--snapshot]}" ]]; then
   # external snapshots might be named <vm_name>.<snapshot_name> or
   # <vm_name>.<UNIX_timestamp>, and are located next to the original vm image
@@ -23,8 +25,6 @@ if [[ "${args[--snapshot]}" ]]; then
 else
   qemu-nbd --connect="$device" "${args[image]}"
 fi
-
-
 
 if [[ -z "${args[--partition]}" ]]; then
   # get largest device
@@ -42,6 +42,8 @@ else
     red "Device '$device_to_mount' does not exist"
   fi
 fi
+
+echo Mount "$device_to_mount" to "${args[mountpoint]}"
 
 mkdir "${args[mountpoint]}"
 
