@@ -45,4 +45,8 @@ fi
 
 mkdir "${args[mountpoint]}"
 
-mount -o ro "$device_to_mount" "${args[mountpoint]}"
+if [[ ${args[--read-only]} ]]; then
+  mount -o ro "$device_to_mount" "${args[mountpoint]}"
+else
+  mount "$device_to_mount" "${args[mountpoint]}"
+fi

@@ -29,9 +29,12 @@ commands:
     short: -p
     arg: partition
     help: Explicit number of partition to mount (defaults to largest, which is usually fine.)
+  - long: --read-only
+    short: -r
+    help: Mount the image as read-only
 
   examples:
-    - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2
+    - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2 --read-only
     - serveqcow2 mount /var/lib/libvirt/images/win11.qcow2 /mnt/win11 -p 1
 
 - name: umount
