@@ -11,7 +11,7 @@ done
 
 echo Connect to local NBD device "$device"
 
-if [[ "${args[--snapshot]}" ]]; then
+if [[ -v "${args[--snapshot]}" ]]; then
   # external snapshots might be named <vm_name>.<snapshot_name> or
   # <vm_name>.<UNIX_timestamp>, and are located next to the original vm image
   # The latter is currently not supported. Provide the timestamp as snapshot and it
@@ -43,12 +43,16 @@ else
   fi
 fi
 
-echo Mount "$device_to_mount" to "${args[mountpoint]}"
-
 mkdir "${args[mountpoint]}"
 
 if [[ ${args[--read-only]} ]]; then
-  mount -o ro "$device_to_mount" "${args[mountpoint]}"
+  mount -r "$device_to_mount" "${args[mountpoint]}" >&2
 else
-  mount "$device_to_mount" "${args[mountpoint]}"
+  mount -w "$device_to_mount" "${args[mountpoint]}" >&2
+  # fail, if image cannot be mounted with write permissions
+  if ! mount | grep "$device_to_mount" | grep -E '(\(rw\)|,rw|rw,)' > /dev/null; then
+    exit 1
+  fi
 fi
+
+echo Mount "$device_to_mount" to "${args[mountpoint]}"
