@@ -29,10 +29,9 @@ fi
 if [[ -z "${args[--partition]}" ]]; then
   # get largest device
   device_to_mount=$(
-    fdisk -l "$device" |
-      tail -n +8 |
-      awk '{print $1, $5}' |
-      sort -hr -k2 |
+    fdisk -l "$device" -o Device,Sectors |
+      grep '^/dev/' |
+      sort -k2 -n -r |
       head -n 1 |
       awk '{print $1}'
   )
