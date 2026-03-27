@@ -1,7 +1,7 @@
 # get device from mountpoint
 device=$(
     mount |
-    grep "${args[mountpoint]}" |
+    grep -w "${args[mountpoint]}" |
     awk '{print $1}' |
     cut -c1-9
 )
