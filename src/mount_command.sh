@@ -52,6 +52,7 @@ else
   if ! mount | grep "$device_to_mount" | grep -E '(\(rw\)|,rw|rw,)' > /dev/null; then
     exit 1
   fi
+  chmod -R 775 "${args[mountpoint]}"
 fi
 
 echo Mount "$device_to_mount" to "${args[mountpoint]}"
