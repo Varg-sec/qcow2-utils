@@ -1,6 +1,6 @@
 # get device from mountpoint
 device=$(
-    mount |
+  mount |
     grep -w "${args[mountpoint]}" |
     awk '{print $1}' |
     cut -c1-9
@@ -9,4 +9,4 @@ device=$(
 umount "${args[mountpoint]}"
 rmdir "${args[mountpoint]}"
 
-qemu-nbd -d "$device" &> /dev/null
+qemu-nbd -d "$device"
