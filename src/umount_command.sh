@@ -6,7 +6,14 @@ device=$(
     cut -c1-9
 )
 
-umount "${args[mountpoint]}"
+if [[ ${args[-l]} ]]; then
+  umount -l "${args[mountpoint]}"
+elif [[ ${args[-f]} ]]; then
+  umount -f "${args[mountpoint]}"
+else
+  umount "${args[mountpoint]}"
+fi
+
 rmdir "${args[mountpoint]}"
 
 qemu-nbd -d "$device"
