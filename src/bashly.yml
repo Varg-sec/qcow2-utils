@@ -1,6 +1,6 @@
 name: serveqcow2
 help: Mount a qcow2 image via qemu-nbd
-version: 0.1.0
+version: 0.2.0
 
 commands:
   - name: mount
