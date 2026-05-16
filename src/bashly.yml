@@ -11,6 +11,7 @@ commands:
       - qemu-nbd
       - nbd-client
       - fdisk
+      - bindfs
 
     args:
       - name: image
@@ -29,6 +30,11 @@ commands:
         short: -p
         arg: partition
         help: Explicit number of partition to mount (defaults to largest, which is usually fine.)
+      - long: --user-id
+        short: -u
+        arg: uid
+        help: UID to be used when mounting the image with write permission (usually 1000 is fine)
+        default: "1000"
       - long: --read-only
         short: -r
         help: Mount the image as read-only

@@ -4,7 +4,7 @@ modprobe nbd max_part=8
 available_devices=$(ls /dev/nbd*)
 
 for device in $available_devices; do
-  if ! nbd-client -c "$device" &> /dev/null; then
+  if ! nbd-client -c "$device" &>/dev/null; then
     break
   fi
 done
@@ -47,12 +47,21 @@ mkdir "${args[mountpoint]}"
 if [[ ${args[--read-only]} ]]; then
   mount -r "$device_to_mount" "${args[mountpoint]}" >&2
 else
-  mount -w "$device_to_mount" "${args[mountpoint]}" >&2
-  # fail, if image cannot be mounted with write permissions
-  if ! mount | grep "$device_to_mount" | grep -E '(\(rw\)|,rw|rw,)' > /dev/null; then
-    exit 1
-  fi
-  chmod -R 775 "${args[mountpoint]}"
+  fs_type=$(blkid -o value -s TYPE "$device_to_mount")
+  case "$fs_type" in
+  ntfs)
+    mount -w "$device_to_mount" "${args[mountpoint]}" >&2
+    # fail, if image cannot be mounted with write permissions
+    if ! mount | grep "$device_to_mount" | grep -E '(\(rw\)|,rw|rw,)' >/dev/null; then
+      exit 1
+    fi
+    ;;
+  *)
+    mkdir "${args[mountpoint]}_base"
+    mount -o loop "$device_to_mount" "${args[mountpoint]}_base"
+    bindfs -m "$(id -un ${args[--user-id]})" "${args[mountpoint]}_base" "${args[mountpoint]}"
+    ;;
+  esac
 fi
 
-echo Mount "$device_to_mount" to "${args[mountpoint]}"
+echo Mounted "$device_to_mount" to "${args[mountpoint]}"

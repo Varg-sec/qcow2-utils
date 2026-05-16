@@ -16,4 +16,24 @@ fi
 
 rmdir "${args[mountpoint]}"
 
+# in case linux image was mounted with writeable permissions, remove base view as well
+base_mountpoint="${args[mountpoint]}_base"
+if mountpoint -q "$base_mountpoint" 2>/dev/null; then
+  # in case base image exists, device needs to be updated
+  device=$(
+    mount |
+      grep -w "$base_mountpoint" |
+      awk '{print $1}' |
+      cut -c1-9
+  )
+  if [[ ${args[-l]} ]]; then
+    umount -l "$base_mountpoint"
+  elif [[ ${args[-f]} ]]; then
+    umount -f "$base_mountpoint"
+  else
+    umount "$base_mountpoint"
+  fi
+  rmdir "$base_mountpoint"
+fi
+
 qemu-nbd -d "$device"
