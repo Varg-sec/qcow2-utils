@@ -3,7 +3,7 @@ device=$(
   mount |
     grep -w "${args[mountpoint]}" |
     awk '{print $1}' |
-    cut -c1-9
+    sed 's/p[0-9]*$//'
 )
 
 if [[ ${args[-l]} ]]; then
@@ -24,7 +24,7 @@ if mountpoint -q "$base_mountpoint" 2>/dev/null; then
     mount |
       grep -w "$base_mountpoint" |
       awk '{print $1}' |
-      cut -c1-9
+      sed 's/p[0-9]*$//'
   )
   if [[ ${args[-l]} ]]; then
     umount -l "$base_mountpoint"
