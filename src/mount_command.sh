@@ -11,20 +11,25 @@ done
 
 echo Connect to local NBD device "$device"
 
-if [[ -v "${args[--snapshot]}" ]]; then
+nbd_args=(--connect="$device")
+if [[ ${args[--read-only]} ]]; then
+  nbd_args+=(--read-only)
+fi
+
+image=${args[image]}
+if [[ -n "${args[--snapshot]:-}" ]]; then
   # external snapshots might be named <vm_name>.<snapshot_name> or
   # <vm_name>.<UNIX_timestamp>, and are located next to the original vm image
   # The latter is currently not supported. Provide the timestamp as snapshot and it
   # will work, e.g. '--snapshot 1770027429' mounts win11.1770027429 snapshot
   if [[ -e "${args[image]::-6}.${args[--snapshot]}" ]]; then
-    qemu-nbd --connect="$device" "${args[image]::-6}.${args[--snapshot]}"
+    image="${args[image]::-6}.${args[--snapshot]}"
   else
     # haven't found external snapshot, assuming it's an internal one
-    qemu-nbd --connect="$device" --load-snapshot=snapshot.name="${args[--snapshot]}" "${args[image]}"
+    nbd_args+=(--load-snapshot=snapshot.name="${args[--snapshot]}")
   fi
-else
-  qemu-nbd --connect="$device" "${args[image]}"
 fi
+qemu-nbd "${nbd_args[@]}" "$image"
 
 if [[ -z "${args[--partition]}" ]]; then
   # get largest device
